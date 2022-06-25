@@ -1,0 +1,215 @@
+{
+	"info": {
+		"_postman_id": "d817c83b-f7c1-4dfe-8e95-5d7d85c5256a",
+		"name": "user-management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16603289"
+	},
+	"item": [
+		{
+			"name": "POST::/users",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "fa-ir",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"bahman.heydarinejad5\",\r\n    \"password\": \"123\",\r\n    \"firstName\": \"Bahman\",\r\n    \"lastName\": \"HeydariNejad\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET::/users/{username}",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "fa-ir",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/users/b.h41",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users",
+						"b.h41"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT::/users/{username}",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "fa-ir",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"bahman.heydarinejad3\",\r\n    \"password\": \"123456\",\r\n    \"firstName\": \"Bahman5\",\r\n    \"lastName\": \"Heydari\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/users/bahman.heydarinejad",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users",
+						"bahman.heydarinejad"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE::/users/{username}",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "fa-ir",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/users/bahman.heydarinejad2",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users",
+						"bahman.heydarinejad2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE::/users/{id}",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "fa-ir",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/users/6",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET::/users",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "fa-ir",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/users?page=0&size=10",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT::/users/{username}/passwords/change",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "fa-ir",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"oldPassword\": \"123\",\r\n    \"newPassword\": \"123\",\r\n    \"confirmPassword\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/users/bahman.heydarinejad5/passwords/change",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users",
+						"bahman.heydarinejad5",
+						"passwords",
+						"change"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
