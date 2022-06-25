@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +24,11 @@ public class UsersResources extends AppBaseResources {
 
     @PostMapping
     public ResponseEntity<AppBaseResponse> create(@RequestBody CreateUserRequest request) {
+
+        if (!StringUtils.hasText(request.getUsername())) {
+            throw new ApiException().addException(400006);
+        }
+
         if (appUserRepository.existsByUsernameEqualsIgnoreCase(request.getUsername())) {
             throw new ApiException().addException(400001);
         }
@@ -30,12 +36,12 @@ public class UsersResources extends AppBaseResources {
         return ok(appMapper.toCreateUserResponse(appUserRepository.save(appMapper.toCreateUser(request, new BCryptPasswordEncoder()))));
     }
 
-    @GetMapping("/{username:^[a-zA-Z0-9_.-]*$}}")
+    @GetMapping("/{username:^[a-zA-Z0-9_.-]*$}")
     public ResponseEntity<GetUserResponse> read(@PathVariable String username) {
         return ok(appMapper.toGetUserResponse(appUserRepository.findFirstByUsernameEqualsIgnoreCase(username).orElseThrow(() -> new ApiException().addException(400002))));
     }
 
-    @PutMapping("/{username:^[a-zA-Z0-9_.-]*$}}")
+    @PutMapping("/{username:^[a-zA-Z0-9_.-]*$}")
     public ResponseEntity<GetUserResponse> update(@PathVariable String username, @RequestBody UpdateUserRequest request) {
         return ok(appMapper.toGetUserResponse(appUserRepository.save(appMapper.toUpdateUser(appUserRepository.findFirstByUsernameEqualsIgnoreCase(username).orElseThrow(() -> new ApiException().addException(400002)), request))));
     }
@@ -62,6 +68,18 @@ public class UsersResources extends AppBaseResources {
     @PutMapping("/{username:^[a-zA-Z0-9_.-]*$}/passwords/change")
     public ResponseEntity<AppBaseResponse> changePassword(@PathVariable String username, @RequestBody ChangeUserPasswordRequest request) {
         ApiException apiException = new ApiException();
+
+        if (!StringUtils.hasText(request.getOldPassword())) {
+            apiException.addException(400007);
+        }
+
+        if (!StringUtils.hasText(request.getNewPassword())) {
+            apiException.addException(400008);
+        }
+
+        if (!StringUtils.hasText(request.getConfirmPassword())) {
+            apiException.addException(400009);
+        }
 
         AppUser appUser = appUserRepository.findFirstByUsernameEqualsIgnoreCase(username).orElseThrow(() -> apiException.addException(400002));
 

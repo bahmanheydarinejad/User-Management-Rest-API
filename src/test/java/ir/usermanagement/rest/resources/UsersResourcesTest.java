@@ -29,8 +29,6 @@ public class UsersResourcesTest {
 
     @BeforeAll
     void init(@Autowired AppUserRepository appUserRepository) {
-        Iterable<AppUser> all = appUserRepository.findAll();
-
         appUserRepository.save(new AppUser("bahman.heydarinejad", new BCryptPasswordEncoder().encode("123"), "Bahman", "HeydariNejad"));
     }
 
