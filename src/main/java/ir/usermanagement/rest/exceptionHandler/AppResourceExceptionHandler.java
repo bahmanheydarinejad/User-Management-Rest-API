@@ -1,9 +1,9 @@
 package ir.usermanagement.rest.exceptionHandler;
 
-import ir.usermanagement.exceptions.ApiException;
+import ir.usermanagement.exceptions.AppException;
 import ir.usermanagement.mappers.AppMapper;
-import ir.usermanagement.models.entities.AppMessage;
 import ir.usermanagement.models.repositories.AppMessageRepository;
+import ir.usermanagement.models.repositories.entities.AppMessage;
 import ir.usermanagement.rest.models.AppBaseResponse;
 import ir.usermanagement.rest.models.AppMessageResponseObject;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +28,8 @@ public class AppResourceExceptionHandler extends ResponseEntityExceptionHandler 
 
     private final AppMapper appMapper;
 
-    @ExceptionHandler(value = {ApiException.class})
-    public ResponseEntity<AppBaseResponse> handleApiException(ApiException e, WebRequest request) {
+    @ExceptionHandler(value = {AppException.class})
+    public ResponseEntity<AppBaseResponse> handleApiException(AppException e, WebRequest request) {
         String acceptLanguage = !StringUtils.hasText(request.getHeader("Accept-Language")) ? "en-en" : request.getHeader("Accept-Language");
 
         Map<Integer, AppMessage> appMessages = appMessageRepository.findAll().stream().collect(Collectors.toMap(AppMessage::getCode, Function.identity()));

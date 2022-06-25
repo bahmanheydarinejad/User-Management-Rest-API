@@ -3,7 +3,7 @@ package ir.usermanagement.exceptions;
 import lombok.Data;
 
 @Data
-public class ApiExceptionDetail {
+public class ExceptionDetail {
 
     private final Integer code;
 

@@ -1,4 +1,4 @@
-package ir.usermanagement.models.entities;
+package ir.usermanagement.models.repositories.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

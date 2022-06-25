@@ -1,7 +1,11 @@
 package ir.usermanagement.mappers;
 
-import ir.usermanagement.models.entities.AppMessage;
-import ir.usermanagement.models.entities.AppUser;
+import ir.usermanagement.models.repositories.entities.AppMessage;
+import ir.usermanagement.models.repositories.entities.AppUser;
+import ir.usermanagement.models.services.dtoes.AppUserDTO;
+import ir.usermanagement.models.services.dtoes.ChangeAppUserPasswordRequestDTO;
+import ir.usermanagement.models.services.dtoes.CreateAppUserRequestDTO;
+import ir.usermanagement.models.services.dtoes.UpdateAppUserRequestDTO;
 import ir.usermanagement.rest.models.*;
 import org.mapstruct.*;
 import org.springframework.data.domain.Page;
@@ -12,11 +16,22 @@ import java.util.List;
 @Mapper(config = AppMapperConfig.class)
 public interface AppMapper {
 
+    @Mapping(target = "password", expression = "java(passwordEncoder.encode(dto.getPassword()))")
+    AppUser toCreateAppUser(CreateAppUserRequestDTO dto, PasswordEncoder passwordEncoder);
+
+    AppUserDTO toAppUserDTO(AppUser appUser);
+
+    @Mapping(target = "response", source = "username")
+    @BeanMapping(ignoreByDefault = true)
+    AppBaseResponse<String> toCreateUserResponse(AppUserDTO appUserDTO);
+
     @Mapping(target = "response.username", source = "username")
     @Mapping(target = "response.firstName", source = "firstName")
     @Mapping(target = "response.lastName", source = "lastName")
     @BeanMapping(ignoreByDefault = true)
-    GetUserResponse toGetUserResponse(AppUser appUser);
+    GetUserResponse toGetUserResponse(AppUserDTO appUserDTO);
+
+    UpdateAppUserRequestDTO toUpdateAppUserRequestDTO(String username, UpdateUserRequest request);
 
     @Mapping(target = "code", source = "appMessage.code")
     @Mapping(target = "description", source = "description", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -28,30 +43,23 @@ public interface AppMapper {
     @BeanMapping(ignoreByDefault = true)
     AppBaseResponse<String> toBadRequestResponse(List<AppMessageResponseObject> messages, String temp);
 
-    @Mapping(target = "firstName", source = "request.firstName")
-    @Mapping(target = "lastName", source = "request.lastName")
-    @Mapping(target = "username", source = "request.username")
-    @Mapping(target = "password", expression = "java(passwordEncoder.encode(request.getPassword()))")
-    @BeanMapping(ignoreByDefault = true)
-    AppUser toCreateUser(CreateUserRequest request, PasswordEncoder passwordEncoder);
-
-    @Mapping(target = "response", source = "username")
-    @BeanMapping(ignoreByDefault = true)
-    AppBaseResponse<String> toCreateUserResponse(AppUser appUser);
-
     @Mapping(target = "firstName", source = "firstName", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "lastName", source = "lastName", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @BeanMapping(ignoreByDefault = true)
-    AppUser toUpdateUser(@MappingTarget AppUser updatedAppUser, UpdateUserRequest updateInfo);
+    AppUser toUpdateUser(@MappingTarget AppUser updatedAppUser, UpdateAppUserRequestDTO updateInfo);
 
-    @Mapping(target = "password", expression = "java(passwordEncoder.encode(request.getNewPassword()))")
-    AppUser toChangeUserPassword(@MappingTarget AppUser appUser, ChangeUserPasswordRequest request, PasswordEncoder passwordEncoder);
+    @Mapping(target = "password", expression = "java(passwordEncoder.encode(dto.getNewPassword()))")
+    AppUser toChangeUserPassword(@MappingTarget AppUser appUser, ChangeAppUserPasswordRequestDTO dto, PasswordEncoder passwordEncoder);
 
-    @Mapping(target = "response", source = "username")
+    @Mapping(target = "response", source = "appUserDTOs")
     @BeanMapping(ignoreByDefault = true)
-    AppBaseResponse<String> toDeleteUserResponse(AppUser appUser);
+    ListUserResponse toListUserResponse(Page<AppUserDTO> appUserDTOs);
 
-    @Mapping(target = "response", source = "appUsers")
-    @BeanMapping(ignoreByDefault = true)
-    ListUserResponse toListUserResponse(Page<AppUser> appUsers);
+    CreateAppUserRequestDTO toCreateAppUserRequestDTO(CreateUserRequest request);
+
+    @Mapping(target = "username", source = "username")
+    @Mapping(target = "newPassword", source = "dto.newPassword")
+    @Mapping(target = "oldPassword", source = "dto.oldPassword")
+    @Mapping(target = "confirmPassword", source = "dto.confirmPassword")
+    ChangeAppUserPasswordRequestDTO toChangeAppUserPasswordRequestDTO(String username, ChangeUserPasswordRequest dto);
 }

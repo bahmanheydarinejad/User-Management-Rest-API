@@ -6,7 +6,7 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       #      ddl-auto: create
-      ddl-auto: update
+      ddl-auto: none
   h2:
     console:
       enabled: true

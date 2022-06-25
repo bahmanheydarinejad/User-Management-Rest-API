@@ -1,9 +1,9 @@
 package ir.usermanagement.configurations;
 
-import ir.usermanagement.models.entities.AppMessage;
-import ir.usermanagement.models.entities.AppMessageDescription;
 import ir.usermanagement.models.repositories.AppMessageDescriptionRepository;
 import ir.usermanagement.models.repositories.AppMessageRepository;
+import ir.usermanagement.models.repositories.entities.AppMessage;
+import ir.usermanagement.models.repositories.entities.AppMessageDescription;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;

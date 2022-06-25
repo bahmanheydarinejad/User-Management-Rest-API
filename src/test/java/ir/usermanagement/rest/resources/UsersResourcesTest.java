@@ -1,8 +1,8 @@
 package ir.usermanagement.rest.resources;
 
-import ir.usermanagement.exceptions.ApiException;
-import ir.usermanagement.models.entities.AppUser;
+import ir.usermanagement.exceptions.AppException;
 import ir.usermanagement.models.repositories.AppUserRepository;
+import ir.usermanagement.models.repositories.entities.AppUser;
 import ir.usermanagement.rest.models.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
@@ -52,7 +52,7 @@ public class UsersResourcesTest {
         Assertions.assertThat(response.getBody().getMessages()).isNull();
         Assertions.assertThat(response.getBody().getResponse()).isNotNull();
 
-        ApiException apiException = assertThrows(ApiException.class, () -> usersResources.create(request));
+        AppException apiException = assertThrows(AppException.class, () -> usersResources.create(request));
         Assertions.assertThat(apiException).isNotNull();
         Assertions.assertThat(apiException.getExceptionsDetails()).isNotEmpty();
         Assertions.assertThat(apiException.getExceptionsDetails().stream().map(detail -> detail.getCode()).collect(Collectors.toList())).contains(400001);
@@ -69,7 +69,7 @@ public class UsersResourcesTest {
         Assertions.assertThat(response.getBody().getMessages()).isNull();
         Assertions.assertThat(response.getBody().getResponse()).isNotNull();
 
-        ApiException apiException = assertThrows(ApiException.class, () -> usersResources.read("xyz"));
+        AppException apiException = assertThrows(AppException.class, () -> usersResources.read("xyz"));
         Assertions.assertThat(apiException).isNotNull();
         Assertions.assertThat(apiException.getExceptionsDetails()).isNotEmpty();
         Assertions.assertThat(apiException.getExceptionsDetails().stream().map(detail -> detail.getCode()).collect(Collectors.toList())).contains(400002);
@@ -90,7 +90,7 @@ public class UsersResourcesTest {
         Assertions.assertThat(response.getBody().getResponse()).isNotNull();
         Assertions.assertThat(response.getBody().getResponse().getLastName()).isEqualTo("Heydari");
 
-        ApiException apiException = assertThrows(ApiException.class, () -> usersResources.update("xyz", request));
+        AppException apiException = assertThrows(AppException.class, () -> usersResources.update("xyz", request));
         Assertions.assertThat(apiException).isNotNull();
         Assertions.assertThat(apiException.getExceptionsDetails()).isNotEmpty();
         Assertions.assertThat(apiException.getExceptionsDetails().stream().map(detail -> detail.getCode()).collect(Collectors.toList())).contains(400002);
@@ -111,16 +111,16 @@ public class UsersResourcesTest {
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getBody()).isNotNull();
         Assertions.assertThat(response.getBody().getMessages()).isNull();
-        Assertions.assertThat(response.getBody().getResponse()).isNotNull();
+        Assertions.assertThat(response.getBody().getResponse()).isNull();
 
-        ApiException apiException = assertThrows(ApiException.class, () -> usersResources.changePassword("xyz", request));
+        AppException apiException = assertThrows(AppException.class, () -> usersResources.changePassword("xyz", request));
         Assertions.assertThat(apiException).isNotNull();
         Assertions.assertThat(apiException.getExceptionsDetails()).isNotEmpty();
-        Assertions.assertThat(apiException.getExceptionsDetails().get(0).getCode()).isEqualTo(400002);
+        Assertions.assertThat(apiException.getExceptionsDetails().stream().map(detail -> detail.getCode()).collect(Collectors.toList())).contains(400002);
 
         request.setOldPassword("1234");
 
-        ApiException apiException1 = assertThrows(ApiException.class, () -> usersResources.changePassword("bahman.heydarinejad", request));
+        AppException apiException1 = assertThrows(AppException.class, () -> usersResources.changePassword("bahman.heydarinejad", request));
         Assertions.assertThat(apiException1).isNotNull();
         Assertions.assertThat(apiException1.getExceptionsDetails()).isNotEmpty();
         Assertions.assertThat(apiException1.getExceptionsDetails().size()).isEqualTo(1);
@@ -129,7 +129,7 @@ public class UsersResourcesTest {
         request.setOldPassword("12345");
         request.setNewPassword("12345");
         request.setConfirmPassword("123456");
-        ApiException apiException2 = assertThrows(ApiException.class, () -> usersResources.changePassword("bahman.heydarinejad", request));
+        AppException apiException2 = assertThrows(AppException.class, () -> usersResources.changePassword("bahman.heydarinejad", request));
         Assertions.assertThat(apiException2).isNotNull();
         Assertions.assertThat(apiException2.getExceptionsDetails()).isNotEmpty();
         Assertions.assertThat(apiException2.getExceptionsDetails().size()).isEqualTo(2);
@@ -153,7 +153,7 @@ public class UsersResourcesTest {
     }
 
     @Test
-    void deleteByIdUserTest(@Autowired UsersResources usersResources, @Autowired AppUserRepository appUserRepository) {
+    void deleteByUserIdTest(@Autowired UsersResources usersResources, @Autowired AppUserRepository appUserRepository) {
 
         Long userId = appUserRepository.findFirstByUsernameEqualsIgnoreCase("bahman.heydarinejad").get().getId();
 
@@ -163,9 +163,9 @@ public class UsersResourcesTest {
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getBody()).isNotNull();
         Assertions.assertThat(response.getBody().getMessages()).isNull();
-        Assertions.assertThat(response.getBody().getResponse()).isNotNull();
+        Assertions.assertThat(response.getBody().getResponse()).isNull();
 
-        ApiException apiException = assertThrows(ApiException.class, () -> usersResources.deleteById(userId + new Random().nextInt()));
+        AppException apiException = assertThrows(AppException.class, () -> usersResources.deleteById(userId + new Random().nextInt()));
         Assertions.assertThat(apiException).isNotNull();
         Assertions.assertThat(apiException.getExceptionsDetails()).isNotEmpty();
         Assertions.assertThat(apiException.getExceptionsDetails().stream().map(detail -> detail.getCode()).collect(Collectors.toList())).contains(400002);
@@ -174,7 +174,7 @@ public class UsersResourcesTest {
     }
 
     @Test
-    void deleteByUsernameUserTest(@Autowired UsersResources usersResources, @Autowired AppUserRepository appUserRepository) {
+    void deleteByUsernameTest(@Autowired UsersResources usersResources, @Autowired AppUserRepository appUserRepository) {
 
         ResponseEntity<AppBaseResponse> response = usersResources.deleteByUserName("bahman.heydarinejad");
 
@@ -182,9 +182,9 @@ public class UsersResourcesTest {
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getBody()).isNotNull();
         Assertions.assertThat(response.getBody().getMessages()).isNull();
-        Assertions.assertThat(response.getBody().getResponse()).isNotNull();
+        Assertions.assertThat(response.getBody().getResponse()).isNull();
 
-        ApiException apiException = assertThrows(ApiException.class, () -> usersResources.deleteByUserName("bahman.heydarinejad"));
+        AppException apiException = assertThrows(AppException.class, () -> usersResources.deleteByUserName("bahman.heydarinejad"));
         Assertions.assertThat(apiException).isNotNull();
         Assertions.assertThat(apiException.getExceptionsDetails()).isNotEmpty();
         Assertions.assertThat(apiException.getExceptionsDetails().stream().map(detail -> detail.getCode()).collect(Collectors.toList())).contains(400002);

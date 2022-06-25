@@ -1,6 +1,6 @@
 package ir.usermanagement.models.repositories;
 
-import ir.usermanagement.models.entities.AppUser;
+import ir.usermanagement.models.repositories.entities.AppUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
